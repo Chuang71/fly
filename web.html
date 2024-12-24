@@ -1,11 +1,10 @@
-//https://www.caa.gov.tw/ContentAndMorefiles.aspx?a=1287&lang=1
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Map Webpage</title>
+    <title>機場禁止施放有礙飛航安全物體範圍</title>
     <link rel="stylesheet" href="https://js.arcgis.com/4.22/esri/themes/light/main.css">
     <script src="https://js.arcgis.com/4.22/"></script>
     <style>
@@ -43,6 +42,11 @@
         background-color: #111;
     }
 
+    #map1 {
+        padding-top: 10px;
+    }
+
+
     section {
         padding: 80px 20px;
         height: 500px;
@@ -53,41 +57,56 @@
         width: 100%;
     }
 
+
     footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
         text-align: center;
-        margin-top: 20px;
-        font-size: 12px;
+        font-size: 10px;
         color: #777;
+        background-color: #f1f1f1;
+        padding: 8px 0;
+        z-index: 1000;
     }
     </style>
 </head>
 
 <body>
-    <!-- Navigation Bar -->
     <ul>
-        <li><a href="#map1">Map 1</a></li>
-        <li><a href="#map2">Map 2</a></li>
-        <li><a href="#map3">Map 3</a></li>
-        <li><a href="#map4">Map 4</a></li>
+        <li><a href="#map1">松山機場</a></li>
+        <li><a href="#map2">桃園機場</a></li>
+        <li><a href="#map3">台中機場</a></li>
+        <li><a href="#map4">高雄機場</a></li>
     </ul>
-    <!-- Map Sections -->
+    <h4 style="padding-top: 40px; padding-left: 20px;padding-right: 20px;">
+        本地圖使用台灣四座機場周遭的限飛範圍，套疊台灣公園綠地向量圖層，在公園進行放風箏、無人機飛行之前，記得看看是否在機場限高範圍內，避免不小心觸法。
+        各機場周遭的內圈為
+        <span style="color: darkred;">完全禁止施放有礙飛航安全物體</span>，
+        外圈則是
+        <span style="color: darkred;">60 公尺以上高度禁止施放有礙飛航安全物體</span>，點選上方導覽列或捲動以觀看不同圖資。
+    </h4>
     <section id="map1">
-        <h2>Map 1: Topographic Map</h2>
+        <h2>松山機場禁止施放有礙飛航安全物體範圍</h2>
         <div id="viewDiv1" class="map-container"></div>
     </section>
     <section id="map2">
-        <h2>Map 2: Streets Map</h2>
+        <h2>桃園機場禁止施放有礙飛航安全物體範圍</h2>
         <div id="viewDiv2" class="map-container"></div>
     </section>
     <section id="map3">
-        <h2>Map 3: Satellite Map</h2>
+        <h2>台中機場禁止施放有礙飛航安全物體範圍</h2>
         <div id="viewDiv3" class="map-container"></div>
     </section>
     <section id="map4">
-        <h2>Map 4: Satellite Map</h2>
+        <h2>高雄機場禁止施放有礙飛航安全物體範圍</h2>
         <div id="viewDiv4" class="map-container"></div>
     </section>
-    <!-- Footer -->
+    <h4 style="padding-left: 20px;">使用圖資:
+    </h4>
+    <h4 style="padding-left: 20px;"><a href="https://www.caa.gov.tw/ContentAndMorefiles.aspx?a=1287&lang=1" target="_blank">交通部民用航空局機場四周禁止施放有礙飛航安全物體範圍圖資</a></h4>
+    <h4 style="padding-bottom: 40px; padding-left: 20px;"><a href="https://services2.arcgis.com/OuqldCWB2weQ4da0/arcgis/rest/services/LU070200_%E5%85%AC%E5%9C%92%E7%B6%A0%E5%9C%B0/FeatureServer" target="_blank">Arcgis LU070200_公園綠地 (FeatureServer)</a>
+    </h4>
     <footer>Copyright &copy; 2024 地理115莊沛珣.</footer>
     <script>
     require([
@@ -95,35 +114,48 @@
         "esri/views/MapView",
         "esri/layers/FeatureLayer"
     ], function(Map, MapView, FeatureLayer) {
-        // Map 1: Topographic
+        // Map 1: TSA
         var map1 = new Map({
             basemap: "satellite"
         });
+
         var view1 = new MapView({
             container: "viewDiv1",
             map: map1,
             center: [121.552, 25.067], // Longitude, latitude
-            zoom: 14
+            zoom: 13
         });
-        var trailheadsLayer1 = new FeatureLayer({
-            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/mygeodata/FeatureServer"
-        });
-        map1.add(trailheadsLayer1);
 
-        // Map 2: Streets
+        var TSALayer1 = new FeatureLayer({
+            url: "https://services2.arcgis.com/OuqldCWB2weQ4da0/arcgis/rest/services/LU070200_%E5%85%AC%E5%9C%92%E7%B6%A0%E5%9C%B0/FeatureServer"
+        });
+        map1.add(TSALayer1);
+
+
+        var TSALayer2 = new FeatureLayer({
+            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/%E6%9D%BE%E5%B1%B1%E6%A9%9F%E5%A0%B4%E7%A6%81%E6%AD%A2%E6%96%BD%E6%94%BE%E6%9C%89%E7%A4%99%E9%A3%9B%E8%88%AA%E5%AE%89%E5%85%A8%E7%89%A9%E9%AB%94%E7%AF%84%E5%9C%8D/FeatureServer"
+        });
+        map1.add(TSALayer2);
+
+        // Map 2: TPE
         var map2 = new Map({
             basemap: "satellite"
         });
         var view2 = new MapView({
             container: "viewDiv2",
             map: map2,
-            center: [121.233, 25.076], // Longitude, latitude
+            center: [121.233, 25.076],
             zoom: 13
         });
-        var hospitalLayer2 = new FeatureLayer({
-            url: "https://www.arcgis.com/sharing/rest/content/items/85199ed702e241f3828645bc36ad8b1b/data"
+        var TPELayer1 = new FeatureLayer({
+            url: "https://services2.arcgis.com/OuqldCWB2weQ4da0/arcgis/rest/services/LU070200_%E5%85%AC%E5%9C%92%E7%B6%A0%E5%9C%B0/FeatureServer"
         });
-        map2.add(hospitalLayer2);
+        map2.add(TPELayer1);
+
+        var TPELayer2 = new FeatureLayer({
+            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/%E6%A1%83%E5%9C%92%E6%A9%9F%E5%A0%B4%E7%A6%81%E6%AD%A2%E6%96%BD%E6%94%BE%E6%9C%89%E7%A4%99%E9%A3%9B%E8%88%AA%E5%AE%89%E5%85%A8%E7%89%A9%E9%AB%94%E7%AF%84%E5%9C%8D/FeatureServer"
+        });
+        map2.add(TPELayer2);
 
         // Map 3: Satellite
         var map3 = new Map({
@@ -135,10 +167,15 @@
             center: [120.62, 24.259], // Longitude, latitude
             zoom: 13
         });
-        var railwayLayer3 = new FeatureLayer({
-            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/California_Rail_Network/FeatureServer"
+        var RMQLayer1 = new FeatureLayer({
+            url: "https://services2.arcgis.com/OuqldCWB2weQ4da0/arcgis/rest/services/LU070200_%E5%85%AC%E5%9C%92%E7%B6%A0%E5%9C%B0/FeatureServer"
         });
-        map3.add(railwayLayer3);
+        map3.add(RMQLayer1);
+
+        var RMQ2 = new FeatureLayer({
+            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/%E5%8F%B0%E4%B8%AD%E6%A9%9F%E5%A0%B4%E7%A6%81%E6%AD%A2%E6%96%BD%E6%94%BE%E6%9C%89%E7%A4%99%E9%A3%9B%E8%88%AA%E5%AE%89%E5%85%A8%E7%89%A9%E9%AB%94%E7%AF%84%E5%9C%8D/FeatureServer"
+        });
+        map3.add(RMQ2);
 
         // Map 4: Satellite
         var map4 = new Map({
@@ -150,10 +187,16 @@
             center: [120.3473, 22.574], // Longitude, latitude
             zoom: 13
         });
-        var populationLayer4 = new FeatureLayer({
-            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/高雄機場/FeatureServer"
+
+        var KHHLayer1 = new FeatureLayer({
+            url: "https://services2.arcgis.com/OuqldCWB2weQ4da0/arcgis/rest/services/LU070200_%E5%85%AC%E5%9C%92%E7%B6%A0%E5%9C%B0/FeatureServer"
         });
-        map4.add(populationLayer4);
+        map4.add(KHHLayer1);
+
+        var KHHLayer2 = new FeatureLayer({
+            url: "https://services7.arcgis.com/lBPc8U344JEzXGW0/arcgis/rest/services/%E9%AB%98%E9%9B%84%E6%A9%9F%E5%A0%B4%E7%A6%81%E6%AD%A2%E6%96%BD%E6%94%BE%E6%9C%89%E7%A4%99%E9%A3%9B%E8%88%AA%E5%AE%89%E5%85%A8%E7%89%A9%E9%AB%94%E7%AF%84%E5%9C%8D/FeatureServer"
+        });
+        map4.add(KHHLayer2);
     });
     </script>
 </body>
